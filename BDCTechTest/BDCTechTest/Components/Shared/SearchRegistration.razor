@@ -1,37 +1,42 @@
 ﻿@using BDCTechTest.Components.Services
 @using System.ComponentModel.DataAnnotations
+@using Newtonsoft.Json
 @inject IServiceBase Service
 @implements IDisposable
 
-
-
 <h3>Please enter a full Vehicle Registration Number</h3>
 
-<EditForm Model="@model" OnValidSubmit=HandleValidSubmit>
+<EditForm Model="@model" OnValidSubmit="HandleValidSubmit" FormName="HistoryForm">
+
+
+    <label for="input">Enter some text:</label>
+
+    <input @bind="model.RegNumber" />
+    <button type="submit">Check History</button>
     <DataAnnotationsValidator />
     <ValidationSummary />
-
-    <input @bind-value="model.RegNumber" />
-    <button type="submit">Check History</button>
 </EditForm>
 
-
-
+@if (responseData != null)
+{
+    <p>@responseData</p>
+}
 
 @code {
-    //private string regNumber;
     private Model model = new Model();
+    private string responseData { get; set; }
 
-    //private EditContext editContext;
+    async Task HandleValidSubmit()
+    {
+        var data = await Service.GetMOTDataAsync(model.RegNumber);
+        responseData = JsonConvert.SerializeObject(data);
+    }
 
-    private async Task HandleValidSubmit() => await Service.GetMOTDataAsync(model.RegNumber);
+    public void Dispose() { }
 
-    public void Dispose(){}
-
-    //MOVE TO SEPARATE CLASS WHEN MADE
     public class Model
     {
-        [Required]
+        [Required(ErrorMessage = "Please enter a valid registration number.")]
         public string RegNumber { get; set; }
     }
 }
