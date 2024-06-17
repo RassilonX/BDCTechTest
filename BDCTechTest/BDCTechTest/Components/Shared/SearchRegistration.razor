@@ -1,5 +1,15 @@
-﻿<h3>Please enter a Vehicle Registration Number</h3>
+﻿@using BDCTechTest.Components.Services
+@inject IServiceBase Service
+@implements IDisposable
+
+
+
+<h3>Please enter a full Vehicle Registration Number</h3>
 
 @code {
+    private string regNumber;
 
+    private async Task HandleValidSubmit() => await Service.GetMOTDataAsync(regNumber); 
+
+    public void Dispose(){}
 }
