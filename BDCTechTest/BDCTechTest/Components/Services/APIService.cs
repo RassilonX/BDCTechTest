@@ -19,8 +19,8 @@ public class APIService : IServiceBase
         try
         {
             var reg = regNumber.Replace(" ", string.Empty).ToUpper();
-            var uri = "https://beta.check-mot.service.gov.uk/trade/vehicles/mot-tests?registration=" + reg;
-            string apiKey = _config["ApiKeys:MOTKey"];
+            string uri = _config["ApiURLS:MOTURI"]?.ToString() + reg;
+            string apiKey = _config["ApiKeys:MOTKey"]?.ToString();
 
             var client = new HttpClient();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json+v6"));
