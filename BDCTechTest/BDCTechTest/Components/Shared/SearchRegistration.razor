@@ -11,21 +11,19 @@
 <h3>Please enter a full Vehicle Registration Number</h3>
 
 <div class="history-form">
-<EditForm Model="@model" OnValidSubmit="HandleValidSubmit" FormName="HistoryForm">
+    <EditForm Model="@model" OnValidSubmit="HandleValidSubmit" FormName="HistoryForm">
+        <label for="input">Enter some text:</label>
 
+        <InputText id="input" @bind-Value="model.RegNumber" />
+        <button type="submit">Check History</button>
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+    </EditForm>
 
-    <label for="input">Enter some text:</label>
-
-    <InputText id="input" @bind-Value="model.RegNumber" />
-    <button type="submit">Check History</button>
-    <DataAnnotationsValidator />
-    <ValidationSummary />
-</EditForm>
-
-@if (responseData != null)
-{
-    <p>@responseData</p>
-}
+    @if (responseData != null)
+    {
+        <p>@responseData</p>
+    }
 </div>
 
 @code {

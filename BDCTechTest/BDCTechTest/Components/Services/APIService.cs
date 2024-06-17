@@ -7,16 +7,24 @@ namespace BDCTechTest.Components.Services;
 
 public class APIService : IServiceBase
 {
+    private readonly IConfiguration _config;
+
+    public APIService(IConfiguration config)
+    {
+        _config = config;
+    }
+
     public async Task<MOTData> GetMOTDataAsync(string regNumber)
     {
         try
         {
             var reg = regNumber.Replace(" ", string.Empty).ToUpper();
             var uri = "https://beta.check-mot.service.gov.uk/trade/vehicles/mot-tests?registration=" + reg;
+            string apiKey = _config["ApiKeys:MOTKey"];
 
             var client = new HttpClient();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json+v6"));
-            client.DefaultRequestHeaders.Add("x-api-key", "fZi8YcjrZN1cGkQeZP7Uaa4rTxua8HovaswPuIno");
+            client.DefaultRequestHeaders.Add("x-api-key", apiKey);
 
             HttpResponseMessage response = await client.GetAsync(uri);
 
