@@ -1,17 +1,21 @@
 ﻿@using BDCTechTest.Components.Services
 @using System.ComponentModel.DataAnnotations
 @using Newtonsoft.Json
+
+@rendermode InteractiveServer
+
 @inject IServiceBase Service
 @implements IDisposable
 
 <h3>Please enter a full Vehicle Registration Number</h3>
 
+<div class="history-form">
 <EditForm Model="@model" OnValidSubmit="HandleValidSubmit" FormName="HistoryForm">
 
 
     <label for="input">Enter some text:</label>
 
-    <input @bind="model.RegNumber" />
+    <InputText id="input" @bind-Value="model.RegNumber" />
     <button type="submit">Check History</button>
     <DataAnnotationsValidator />
     <ValidationSummary />
@@ -21,6 +25,7 @@
 {
     <p>@responseData</p>
 }
+</div>
 
 @code {
     private Model model = new Model();
@@ -36,7 +41,6 @@
 
     public class Model
     {
-        [Required(ErrorMessage = "Please enter a valid registration number.")]
         public string RegNumber { get; set; }
     }
 }
