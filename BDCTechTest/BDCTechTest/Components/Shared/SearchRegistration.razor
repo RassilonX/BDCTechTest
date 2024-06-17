@@ -1,4 +1,5 @@
 ﻿@using BDCTechTest.Components.Services
+@using System.ComponentModel.DataAnnotations
 @inject IServiceBase Service
 @implements IDisposable
 
@@ -6,10 +7,31 @@
 
 <h3>Please enter a full Vehicle Registration Number</h3>
 
-@code {
-    private string regNumber;
+<EditForm Model="@model" OnValidSubmit=HandleValidSubmit>
+    <DataAnnotationsValidator />
+    <ValidationSummary />
 
-    private async Task HandleValidSubmit() => await Service.GetMOTDataAsync(regNumber); 
+    <input @bind-value="model.RegNumber" />
+    <button type="submit">Check History</button>
+</EditForm>
+
+
+
+
+@code {
+    //private string regNumber;
+    private Model model = new Model();
+
+    //private EditContext editContext;
+
+    private async Task HandleValidSubmit() => await Service.GetMOTDataAsync(model.RegNumber);
 
     public void Dispose(){}
+
+    //MOVE TO SEPARATE CLASS WHEN MADE
+    public class Model
+    {
+        [Required]
+        public string RegNumber { get; set; }
+    }
 }

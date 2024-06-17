@@ -1,10 +1,13 @@
 using BDCTechTest.Components;
+using BDCTechTest.Components.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+
+builder.Services.AddTransient<IServiceBase, APIService>();
 
 var app = builder.Build();
 
