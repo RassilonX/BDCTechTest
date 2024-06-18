@@ -20,9 +20,9 @@
         <ValidationSummary />
     </EditForm>
 
-    @if (responseData != null)
+    @if (responseData != null && responseData.Message != string.Empty)
     {
-        <p>@responseData</p>
+        <p>@responseData.Message</p>
     }
 </div>
 
