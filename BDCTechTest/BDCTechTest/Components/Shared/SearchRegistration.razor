@@ -24,6 +24,29 @@
     {
         <p>@responseData.Message</p>
     }
+    else if(responseData != null && responseData.Message == string.Empty)
+    {
+        <table>
+            <thead>
+                <tr>
+                    <th>Make</th>
+                    <th>Model</th>
+                    <th>Colour</th>
+                    <th>MOT Expiry</th>
+                    <th>Mileage</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>@responseData.Make</td>
+                    <td>@responseData.Model</td>
+                    <td>@responseData.Colour</td>
+                    <td>@responseData.MOTExpiry.ToString("yyyy-MM-dd")</td>
+                    <td>@responseData.Mileage</td>
+                </tr>
+            </tbody>
+        </table>
+    }
 </div>
 
 @code {
