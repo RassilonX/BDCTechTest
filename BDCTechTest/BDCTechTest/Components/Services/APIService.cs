@@ -18,7 +18,8 @@ public class APIService : IServiceBase
     {
         try
         {
-            var reg = regNumber.Replace(" ", string.Empty).ToUpper();
+            var reg = new string(regNumber.Where(c => char.IsLetterOrDigit(c)).ToArray()).ToUpper();
+
             string uri = _config["ApiURLS:MOTURI"]?.ToString() + reg;
             string apiKey = _config["ApiKeys:MOTKey"]?.ToString();
 
