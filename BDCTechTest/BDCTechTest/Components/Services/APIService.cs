@@ -8,10 +8,12 @@ namespace BDCTechTest.Components.Services;
 public class APIService : IServiceBase
 {
     private readonly IConfiguration _config;
+    private readonly HttpClient _client;
 
-    public APIService(IConfiguration config)
+    public APIService(IConfiguration config, HttpClient client)
     {
         _config = config;
+        _client = client ?? new HttpClient();
     }
 
     public async Task<MOTData> GetMOTDataAsync(string regNumber)
@@ -23,11 +25,10 @@ public class APIService : IServiceBase
             string uri = _config["ApiURLS:MOTURI"]?.ToString() + reg;
             string apiKey = _config["ApiKeys:MOTKey"]?.ToString();
 
-            var client = new HttpClient();
-            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json+v6"));
-            client.DefaultRequestHeaders.Add("x-api-key", apiKey);
+            _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json+v6"));
+            _client.DefaultRequestHeaders.Add("x-api-key", apiKey);
 
-            HttpResponseMessage response = await client.GetAsync(uri);
+            HttpResponseMessage response = await _client.GetAsync(uri);
 
             if (response.IsSuccessStatusCode)
             {

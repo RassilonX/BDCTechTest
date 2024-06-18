@@ -7,7 +7,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-builder.Services.AddTransient<IServiceBase, APIService>();
+builder.Services.AddTransient<IServiceBase, APIService>(provider =>
+{
+    return new APIService(
+        provider.GetService<IConfiguration>(),
+        new HttpClient()
+    );
+});
 
 var app = builder.Build();
 
