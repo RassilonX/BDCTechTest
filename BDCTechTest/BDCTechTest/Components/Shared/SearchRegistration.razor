@@ -11,41 +11,49 @@
 <h3>Please enter a full Vehicle Registration Number</h3>
 
 <div class="history-form">
-    <EditForm Model="@model" OnValidSubmit="HandleValidSubmit" FormName="HistoryForm">
+    <div class="form-container">
+        <EditForm Model="@model" OnValidSubmit="HandleValidSubmit" FormName="HistoryForm">
 
-        <InputText id="input" @bind-Value="model.RegNumber" />
-        <button type="submit">Check History</button>
-        <DataAnnotationsValidator />
-        <ValidationSummary />
-    </EditForm>
+            <InputText id="input" @bind-Value="model.RegNumber" />
+            <button type="submit">Check History</button>
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+        </EditForm>
+    </div>
 
-    @if (responseData != null && responseData.Message != string.Empty)
-    {
-        <p class="error-text">@responseData.Message</p>
-    }
-    else if(responseData != null && responseData.Message == string.Empty)
-    {
-        <table>
-            <thead>
-                <tr>
-                    <th>Make</th>
-                    <th>Model</th>
-                    <th>Colour</th>
-                    <th>MOT Expiry</th>
-                    <th>Mileage</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>@responseData.Make</td>
-                    <td>@responseData.Model</td>
-                    <td>@responseData.Colour</td>
-                    <td>@responseData.MOTExpiry.ToString("yyyy-MM-dd")</td>
-                    <td>@responseData.Mileage</td>
-                </tr>
-            </tbody>
-        </table>
-    }
+    <br /><br />
+
+    <div class="result-container">
+        @if (responseData != null && responseData.Message != string.Empty)
+        {
+            <p class="error-text">@responseData.Message</p>
+        }
+        else if (responseData != null && responseData.Message == string.Empty)
+        {
+            <table>
+                <thead>
+                    <tr>
+                        <th>Make</th>
+                        <th>Model</th>
+                        <th>Colour</th>
+                        <th>MOT Expiry</th>
+                        <th>Mileage</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>@responseData.Make</td>
+                        <td>@responseData.Model</td>
+                        <td>@responseData.Colour</td>
+                        <td>@responseData.MOTExpiry.ToString("yyyy-MM-dd")</td>
+                        <td>@responseData.Mileage</td>
+                    </tr>
+                </tbody>
+            </table>
+        }
+    </div>
+
+
 </div>
 
 @code {

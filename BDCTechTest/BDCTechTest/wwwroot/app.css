@@ -28,7 +28,9 @@ h1:focus {
     border-color: #929292;
 }
 
-.container {
+.container,
+.form-container,
+.result-container {
     display: grid;
     place-items: center;
 }
