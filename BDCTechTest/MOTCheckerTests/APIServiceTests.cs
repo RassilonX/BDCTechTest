@@ -1,10 +1,6 @@
-using BDCTechTest.Components.Models;
 using BDCTechTest.Components.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Moq;
-using Moq.Protected;
-using RichardSzalay.MockHttp;
 using System.Net;
 using System.Text;
 
@@ -13,7 +9,6 @@ namespace MOTCheckerTests;
 public class APIServiceTests
 {
     private readonly APIService _service;
-    private readonly MockHttpMessageHandler _handler;
 
     public APIServiceTests()
     {
@@ -22,29 +17,7 @@ public class APIServiceTests
         mockConfig.SetupGet(c => c["ApiURLS:MOTURI"]).Returns("https://api.example.com/mot/");
         mockConfig.SetupGet(c => c["ApiKeys:MOTKey"]).Returns("my-api-key");
 
-        _handler = new MockHttpMessageHandler();
-        _handler.When("https://api.example.com/mot/ABC123")
-           .Respond("application/json",
-                @"[
-                    {
-                        ""primaryColour"": ""Red"",
-                        ""model"": ""Ford Focus"",
-                        ""make"": ""Ford"",
-                        ""motTests"": [
-                            {
-                                ""odometerValue"": 50000,
-                                ""expiryDate"": ""2025-01-01T00:00:00""
-                            }
-                        ]
-                    }
-                ]");
-
-        _handler.When("https://api.example.com/mot/INVALID")
-           .Respond(HttpStatusCode.NotFound);
-
-        var httpClient = new HttpClient(_handler);
-
-        _service = new APIService(mockConfig.Object, httpClient);
+        _service = new APIService(mockConfig.Object);
     }
 
     #region Happy Path Tests

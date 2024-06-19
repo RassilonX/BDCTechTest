@@ -1,19 +1,16 @@
 ﻿using BDCTechTest.Components.Models;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
-using static System.Net.WebRequestMethods;
 
 namespace BDCTechTest.Components.Services;
 
 public class APIService : IServiceBase
 {
     private readonly IConfiguration _config;
-    private readonly HttpClient _client;
 
-    public APIService(IConfiguration config, HttpClient client)
+    public APIService(IConfiguration config)
     {
         _config = config;
-        _client = client ?? new HttpClient();
     }
 
     public async Task<MOTData> GetMOTDataAsync(string regNumber)
