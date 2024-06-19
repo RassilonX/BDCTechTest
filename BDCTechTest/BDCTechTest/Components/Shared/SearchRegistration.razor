@@ -12,7 +12,6 @@
 
 <div class="history-form">
     <EditForm Model="@model" OnValidSubmit="HandleValidSubmit" FormName="HistoryForm">
-        <label for="input">Enter some text:</label>
 
         <InputText id="input" @bind-Value="model.RegNumber" />
         <button type="submit">Check History</button>
@@ -22,7 +21,7 @@
 
     @if (responseData != null && responseData.Message != string.Empty)
     {
-        <p>@responseData.Message</p>
+        <p class="error-text">@responseData.Message</p>
     }
     else if(responseData != null && responseData.Message == string.Empty)
     {
