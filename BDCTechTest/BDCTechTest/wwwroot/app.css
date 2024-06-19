@@ -53,10 +53,14 @@ td {
 }
 
 .error-text {
-    color: red;
+    color: #660000;
 }
 
 .history-form {
     display: grid;
     align-items: center;
+}
+
+html {
+    background-color: #badbed;
 }

@@ -49,7 +49,7 @@
 </div>
 
 @code {
-    private Model model = new Model();
+    private RegModel model = new RegModel();
     private MOTData responseData = null;
 
     async Task HandleValidSubmit()
@@ -59,9 +59,4 @@
     }
 
     public void Dispose() { }
-
-    public class Model
-    {
-        public string RegNumber { get; set; }
-    }
 }
