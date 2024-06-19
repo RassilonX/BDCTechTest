@@ -25,33 +25,15 @@ public class APIService : IServiceBase
             string uri = _config["ApiURLS:MOTURI"]?.ToString() + reg;
             string apiKey = _config["ApiKeys:MOTKey"]?.ToString();
 
-            _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json+v6"));
-            _client.DefaultRequestHeaders.Add("x-api-key", apiKey);
-
-            HttpResponseMessage response = await _client.GetAsync(uri);
-
-            if (response.IsSuccessStatusCode)
+            using (var client = new HttpClient())
             {
-                var responseBody = await response.Content.ReadAsStringAsync();
-                dynamic jsonData = JsonConvert.DeserializeObject(responseBody);
 
-                string expiryDate = jsonData[0]["motTests"][0]["expiryDate"];
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json+v6"));
+                client.DefaultRequestHeaders.Add("x-api-key", apiKey);
 
-                var data = new MOTData()
-                {
-                    Message = string.Empty,
-                    Colour = jsonData[0]["primaryColour"],
-                    Model = jsonData[0]["model"],
-                    Make = jsonData[0]["make"],
-                    Mileage = jsonData[0]["motTests"][0]["odometerValue"],
-                    MOTExpiry = DateTime.Parse(expiryDate)
-                };
+                HttpResponseMessage response = await client.GetAsync(uri);
 
-                return data;
-            }
-            else
-            {
-                throw new Exception("No vehicle matching that registration was found");
+                return await ProcessMOTCheckResponse(response);
             }
 
         }
@@ -60,5 +42,32 @@ public class APIService : IServiceBase
             return new MOTData() { Message = ex.Message };
         }
 
+    }
+
+    public async Task<MOTData> ProcessMOTCheckResponse(HttpResponseMessage response)
+    {
+        if (response.IsSuccessStatusCode)
+        {
+            var responseBody = await response.Content.ReadAsStringAsync();
+            dynamic jsonData = JsonConvert.DeserializeObject(responseBody);
+
+            string expiryDate = jsonData[0]["motTests"][0]["expiryDate"];
+
+            var data = new MOTData()
+            {
+                Message = string.Empty,
+                Colour = jsonData[0]["primaryColour"],
+                Model = jsonData[0]["model"],
+                Make = jsonData[0]["make"],
+                Mileage = jsonData[0]["motTests"][0]["odometerValue"],
+                MOTExpiry = DateTime.Parse(expiryDate)
+            };
+
+            return data;
+        }
+        else
+        {
+            throw new Exception("No vehicle matching that registration was found");
+        }
     }
 }

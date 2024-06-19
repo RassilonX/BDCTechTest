@@ -49,43 +49,52 @@ public class APIServiceTests
 
     #region Happy Path Tests
     [Fact]
-    public async Task GetMOTDataAsync_ValidLicenseNumber_ReturnsSuccess()
+    public async Task ProcessMOTCheckResponse_SuccessStatusCode_ReturnsSuccessObject()
     {
         // Arrange
-        var regNumber = "ABC123";
+        var response = new HttpResponseMessage(HttpStatusCode.OK);
+        response.Content = new StringContent(
+            @"[
+                {
+                    ""primaryColour"": ""Blue"",
+                    ""model"": ""Ford Focus"",
+                    ""make"": ""Ford"",
+                    ""motTests"": [
+                        {
+                            ""odometerValue"": 50000,
+                            ""expiryDate"": ""2025.06.30""
+                        }
+                    ]
+                }
+            ]",
+            Encoding.UTF8,
+            "application/json"
+        );
 
         // Act
-        var result = await _service.GetMOTDataAsync(regNumber);
+        var result = await _service.ProcessMOTCheckResponse(response);
 
         // Assert
         Assert.NotNull(result);
-        Assert.Equal("Red", result.Colour);
+        Assert.Equal("Blue", result.Colour);
         Assert.Equal("Ford Focus", result.Model);
         Assert.Equal("Ford", result.Make);
         Assert.Equal(50000, result.Mileage);
-        Assert.Equal(new DateTime(2025, 1, 1), result.MOTExpiry);
-        Assert.Empty(result.Message);
+        Assert.Equal(new DateTime(2025, 6, 30), result.MOTExpiry);
+        Assert.Equal(string.Empty, result.Message);
     }
     #endregion
 
     #region Unhappy Path Tests
     [Fact]
-    public async Task GetMOTDataAsync_InvalidLicenseNumber_ReturnsDataWithErrorMessage()
+    public async Task ProcessMOTCheckResponse_UnsuccessfulStatusCode_ReturnsDataWithErrorMessage()
     {
         // Arrange
-        var regNumber = "INVALID";
+        var response = new HttpResponseMessage(HttpStatusCode.NotFound);
 
-        // Act
-        var result = await _service.GetMOTDataAsync(regNumber);
-
-        // Assert
-        Assert.NotNull(result);
-        Assert.Null(result.Colour);
-        Assert.Null(result.Model);
-        Assert.Null(result.Make);
-        Assert.Equal(0, result.Mileage);
-        Assert.Equal(new DateTime(), result.MOTExpiry);
-        Assert.Equal("No vehicle matching that registration was found", result.Message);
+        // Act - Assert
+        var ex = await Assert.ThrowsAsync<Exception>(() => _service.ProcessMOTCheckResponse(response));
+        Assert.Equal("No vehicle matching that registration was found", ex.Message);
     }
     #endregion
 }
